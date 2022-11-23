@@ -11,6 +11,7 @@
 
 #define MAX_LINE_LENGTH 100
 #define	MAXLINE	8192
+
 char * removeCommasFromStr(char *string)
 {
     // non_comma_count to keep the frequency of non space characters
@@ -33,7 +34,7 @@ char * removeCommasFromStr(char *string)
 
 void str_cli(FILE * fp,int sockfd) {
 	int operation=0;
-    char line[MAX_LINE_LENGTH] = {0};
+    char line[MAX_LINE_LENGTH] = {0},lineOrig[MAX_LINE_LENGTH] = {0};
     unsigned int line_count = 0;
 	int n,number;	
 	char sendline[MAXLINE], rcvline[MAXLINE];
@@ -42,7 +43,10 @@ void str_cli(FILE * fp,int sockfd) {
     {
         /* Print each line */
         printf("Reading line number %02d: %s", ++line_count, line);
-        removeCommasFromStr(line);
+        strcpy(lineOrig,line);
+		lineOrig[strlen(lineOrig)-1] = 0;
+		removeCommasFromStr(line);
+		
         /* Add a trailing newline to lines that don't already have one */
         if (line[strlen(line) - 1] != '\n')
             printf("\n");
@@ -68,7 +72,7 @@ void str_cli(FILE * fp,int sockfd) {
 			if (n<=0) perror("str_cli: read error");
 			rcvline[n] = 0;
 
-			printf("Received Answer is: ");
+			printf("OP%d(%s)=",operation,lineOrig);
 			fputs(rcvline, stdout);
 		}
 
