@@ -32,6 +32,7 @@ char * removeCommasFromStr(char *string)
 }
 
 void str_cli(FILE * fp,int sockfd) {
+	int operation=0;
     char line[MAX_LINE_LENGTH] = {0};
     unsigned int line_count = 0;
 	int n,number;	
@@ -40,7 +41,7 @@ void str_cli(FILE * fp,int sockfd) {
     while (fgets(line, MAX_LINE_LENGTH, fp))
     {
         /* Print each line */
-        printf("line[%02d]: %s", ++line_count, line);
+        printf("Reading line number %02d: %s", ++line_count, line);
         removeCommasFromStr(line);
         /* Add a trailing newline to lines that don't already have one */
         if (line[strlen(line) - 1] != '\n')
@@ -48,13 +49,29 @@ void str_cli(FILE * fp,int sockfd) {
 		
 		n = write(sockfd, line, strlen(line));
 		if (n < 0) perror("str_cli: write error"); 
-		
-		n = read(sockfd, rcvline, MAXLINE);
-		if (n <= 0) perror("str_cli: read error");
-		rcvline[n] = 0;
-		
-		printf("Received text is: ");
-		fputs(rcvline, stdout);
+		printf("What would you like to do ?\n");
+		printf("1.Computing the count of numbers that consist of 1 digit in a list of integers.\n");
+		printf("2.Computing the count of numbers that consist of 2 digit in a list of integers.\n");
+		printf("3.Finding the maximum number in a list of integers.\n");
+		printf("4.Finding the maximum number in a list of integers.\n");
+		printf("5.Finding the difference between the maximum and the minimum numbers in a list of integers.\n");
+		scanf("%d", &operation);
+		if(operation < 1 || operation > 5)
+			printf("Unsupported Operation\n");
+		else{
+			n = write(sockfd, line, strlen(line));
+			if (n < 0) perror("str_cli: write error");
+			n = write(sockfd, &operation, sizeof(operation));
+			if (n < 0) perror("str_cli: write error");
+
+			n = read(sockfd, rcvline, MAXLINE);
+			if (n<=0) perror("str_cli: read error");
+			rcvline[n] = 0;
+
+			printf("Received Answer is: ");
+			fputs(rcvline, stdout);
+		}
+
     }
     /* Close file */
     if (fclose(fp))
