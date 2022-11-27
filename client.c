@@ -41,6 +41,7 @@ void str_cli(FILE * fp,int sockfd, char time) {
 
     while (fgets(line, MAX_LINE_LENGTH, fp))
     {
+		if(line_count != 0) sleep(time);
         /* Print each line */
         printf("Reading line number %02d: %s", ++line_count, line);
         strcpy(lineOrig,line); 
@@ -74,7 +75,6 @@ void str_cli(FILE * fp,int sockfd, char time) {
 
 			printf("OP%d(%s)=",operation,lineOrig);
 			fputs(rcvline, stdout);
-			sleep(time);
 		}
 
     }
