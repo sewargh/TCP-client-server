@@ -8,6 +8,7 @@
 #include	<stdlib.h>
 #include	<errno.h>
 #include 	<unistd.h>
+#include	<time.h>
 
 #define MAX_LINE_LENGTH 100
 #define	MAXLINE	8192
@@ -32,7 +33,8 @@ char * removeCommasFromStr(char *string)
     return string;
 }
 
-void str_cli(FILE * fp,int sockfd, char time) {
+void str_cli(FILE * fp,int sockfd, int time) {
+	time = time * 1e-6;
 	int operation=0;
     char line[MAX_LINE_LENGTH] = {0},lineOrig[MAX_LINE_LENGTH] = {0};
     unsigned int line_count = 0;
@@ -114,9 +116,11 @@ int main(int argc, char ** argv) {
               printf("Error! Could not open file\n"); 
               exit(-1); // must include stdlib.h 
             } 
-    printf(argv[4]);     
+    printf(argv[4]);   
+	int time = atoi(argv[4]) ;
+	printf("timeeeeee: %d",time);
 	//this function is the service that the client will request from the server.
-	str_cli(in_file, sockfd,1);
+	str_cli(in_file, sockfd,time);
 	
 	return 0;
 }
