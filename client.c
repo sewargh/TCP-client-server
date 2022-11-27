@@ -32,7 +32,7 @@ char * removeCommasFromStr(char *string)
     return string;
 }
 
-void str_cli(FILE * fp,int sockfd) {
+void str_cli(FILE * fp,int sockfd, char time) {
 	int operation=0;
     char line[MAX_LINE_LENGTH] = {0},lineOrig[MAX_LINE_LENGTH] = {0};
     unsigned int line_count = 0;
@@ -43,8 +43,8 @@ void str_cli(FILE * fp,int sockfd) {
     {
         /* Print each line */
         printf("Reading line number %02d: %s", ++line_count, line);
-        strcpy(lineOrig,line);
-		lineOrig[strlen(lineOrig)-1] = 0;
+        strcpy(lineOrig,line); 
+		lineOrig[strlen(lineOrig)-1] = 0;// to remove \n; for the output format.
 		removeCommasFromStr(line);
 		
         /* Add a trailing newline to lines that don't already have one */
@@ -74,6 +74,7 @@ void str_cli(FILE * fp,int sockfd) {
 
 			printf("OP%d(%s)=",operation,lineOrig);
 			fputs(rcvline, stdout);
+			sleep(time);
 		}
 
     }
@@ -107,15 +108,15 @@ int main(int argc, char ** argv) {
 	if (c_retVal < 0) perror("main: connect error");
 
 	//stdin is the input file 
-	FILE *in_file  = fopen("input.txt", "r"); // read only 
+	FILE *in_file  = fopen(argv[3], "r"); // read only 
 	if (! in_file ) 
             {   
               printf("Error! Could not open file\n"); 
               exit(-1); // must include stdlib.h 
             } 
-           
+    printf(argv[4]);     
 	//this function is the service that the client will request from the server.
-	str_cli(in_file, sockfd);
+	str_cli(in_file, sockfd,1);
 	
 	return 0;
 }
