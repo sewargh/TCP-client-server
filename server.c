@@ -32,13 +32,12 @@ while ( (n = read(connfd, buf, MAXLINE)) > 0 ) {
     int maxnumber =0;
     int minnumber=100;
     int diffrence;
-    char* src = "Unsupported Operation";
+    char src []= "Unsupported Operation";
     char result[20];
 
 	if (n < 0) perror("read error");
 	buf[n] = 0;
 	printf("Received text is: %s", buf);
-
 
 	for (int g = 0; g < sizeof(buf); g++) {
 		// Reads the character where the seeker is currently
@@ -63,16 +62,16 @@ while ( (n = read(connfd, buf, MAXLINE)) > 0 ) {
 			i++; }}
 	arr[j]= atoi(buffer);
 
-	for(int i = 0; i < j; i++){
-		printf("Number [%d]: %d\n", i, arr[i]);  }
+	//for(int i = 0; i < j; i++){
+		//printf("Number [%d]: %d\n", i, arr[i]);  }
 
 
-
+	memset(buf, 0, sizeof(buf));
 	n = read(connfd, buf, MAXLINE);
 	if (n < 0) perror("read error");
 	buf[n] = 0;
 	printf("Received text is: %s", buf);
-
+        //b= atoi(buf[0])
 	b = buf[0];
 	choice= (int)b;
 	printf("%d",choice);
@@ -144,7 +143,8 @@ while ( (n = read(connfd, buf, MAXLINE)) > 0 ) {
 		      break; }
 
 	      default: {
-                   snprintf(buf, sizeof(buf), "%s\n", src);
+                   strcpy(src,buf);
+                   //snprintf(buf, sizeof(buf), "%s\n", src);
 		   retVal = write(connfd, buf, n);
 	           if (retVal < 0) perror("write error");
 		   //printf("Unsupported Operation");
