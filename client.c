@@ -29,7 +29,8 @@ char * removeCommasFromStr(char *string)
     }
     
     //Finally placing final character at the string end
-    string[non_comma_count] = '\0';
+	string[non_comma_count] = ' ';
+	string[non_comma_count+1] = '\0';
     return string;
 }
 
@@ -45,7 +46,7 @@ void str_cli(FILE * fp,int sockfd, int time) {
     {
 		if(line_count != 0) sleep(time);
         /* Print each line */
-        printf("Reading line number %02d: %s", ++line_count, line);
+        //printf("Reading line number %02d: %s", ++line_count, line);
         strcpy(lineOrig,line); 
 		lineOrig[strlen(lineOrig)-1] = 0;// to remove \n; for the output format.
 		removeCommasFromStr(line);
@@ -63,21 +64,18 @@ void str_cli(FILE * fp,int sockfd, int time) {
 		printf("4.Finding the maximum number in a list of integers.\n");
 		printf("5.Finding the difference between the maximum and the minimum numbers in a list of integers.\n");
 		scanf("%d", &operation);
-		if(operation < 1 || operation > 5)
-			printf("Unsupported Operation\n");
-		else{
-			n = write(sockfd, line, strlen(line));
-			if (n < 0) perror("str_cli: write error");
+
+			//n = write(sockfd, line, strlen(line));
+			//if (n < 0) perror("str_cli: write error");
 			n = write(sockfd, &operation, sizeof(operation));
 			if (n < 0) perror("str_cli: write error");
 
 			n = read(sockfd, rcvline, MAXLINE);
 			if (n<=0) perror("str_cli: read error");
 			rcvline[n] = 0;
-
 			printf("OP%d(%s)=",operation,lineOrig);
 			fputs(rcvline, stdout);
-		}
+
 
     }
     /* Close file */
@@ -116,9 +114,7 @@ int main(int argc, char ** argv) {
               printf("Error! Could not open file\n"); 
               exit(-1); // must include stdlib.h 
             } 
-    printf(argv[4]);   
 	int time = atoi(argv[4]) ;
-	printf("timeeeeee: %d",time);
 	//this function is the service that the client will request from the server.
 	str_cli(in_file, sockfd,time);
 	
