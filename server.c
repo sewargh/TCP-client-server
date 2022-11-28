@@ -7,16 +7,14 @@
 #include	<stdlib.h>
 #include	<errno.h>
 #include 	<unistd.h>
-#include	<time.h>
+#include        <time.h>
 #include	<sys/wait.h>
 
 #define	LISTENQ	1024
 #define	MAXLINE	8192
 
-void operations(int connfd, char cliaddr[32]) {
 
-FILE *log;
-log  = fopen ("log-file.txt", "w");
+void operations(int connfd, char cliaddr[32], FILE * log) {
 
 int retVal;
 ssize_t n;
@@ -174,6 +172,9 @@ fprintf(log ,"STATUS :                %s \n-------------------------------------
 
 
 int main(int argc, char ** argv) {
+    FILE *log;
+    log  = fopen ("log-file.txt", "w");
+
     pid_t pid;
     int listenfd, connfd, l_retVal, b_retVal, retVal, status ,clicount = 0;
     socklen_t len;
@@ -201,17 +202,17 @@ int main(int argc, char ** argv) {
 			if( (pid = fork()) == 0 ) {
 				retVal = close(listenfd);
 				if (retVal < 0) perror("main: child close error");
-				operations(connfd, inet_ntoa(cliaddr.sin_addr));
-				//fclose(log);
+				operations(connfd, inet_ntoa(cliaddr.sin_addr), log);
 				exit(0);
 			}
 			else {
 				if (clicount > 4)
-				  if((pid = wait(&status)) == -1)
+				  if((pid = waitpid(-1, &status, 0)) == -1)
 				     perror("main: wait error");
-				else clicount--;
+				  else clicount--;
 			}
 			retVal = close(connfd);
 			if (retVal < 0) perror("main: parent close error");
 	}
+    fclose(log);
     return 0; }
