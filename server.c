@@ -7,7 +7,7 @@
 #include	<stdlib.h>
 #include	<errno.h>
 #include 	<unistd.h>
-#include    <time.h>
+#include	<time.h>
 #include	<sys/wait.h>
 
 #define	LISTENQ	1024
@@ -159,7 +159,7 @@ char *pts; /* pointer to time string */
 time_t now; /* current time */
 char *ctime();
 (void) time(&now);
-fprintf(log ,"LOCAL TIME :              %s", ctime(&now));
+fprintf(log ,"LOCAL TIME :            %s", ctime(&now));
 struct sockaddr_in* pV4Addr = (struct sockaddr_in*)&cliaddr;
 struct in_addr ipAddr = pV4Addr->sin_addr;
 char str[INET_ADDRSTRLEN];
@@ -167,7 +167,7 @@ inet_ntop( AF_INET, &ipAddr, str, INET_ADDRSTRLEN );
 fprintf(log ,"CLIENT IP ADDRESS :	%s \n", str);
 fprintf(log ,"CLIENT IP ADDRESS :	%s \n", cliaddr);
 fprintf(log ,"OPERATION NUMBER :	%d \n", choice);
-fprintf(log ,"STATUS :                 %s \n---------------------------------------------------------- \n", result);
+fprintf(log ,"STATUS :                %s \n---------------------------------------------------------- \n", result);
 //fclose(log);
 
 }}
