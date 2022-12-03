@@ -41,11 +41,9 @@ void str_cli(FILE * fp,int sockfd, int time) {
 
 
     while (fgets(line, MAX_LINE_LENGTH, fp)) {
-
 	if(line_count != 0) sleep(time);
-        /* Print each line */
-        //printf("Reading line number %02d: %s", ++line_count, line);
-        strcpy(lineOrig,line);
+    ++line_count;
+    strcpy(lineOrig,line);
 	lineOrig[strlen(lineOrig)-1] = 0;// to remove \n; for the output format.
 	printf("\nWhat would you like to do ?\n");
 	printf("1.Computing the count of numbers that consist of 1 digit in a list of integers.\n");
@@ -64,18 +62,17 @@ void str_cli(FILE * fp,int sockfd, int time) {
 	op[strlen(op)]= ' ';
         op[strlen(op)+1]= '\0';
 	strcat(line , op);
-	//printf("Sent line is :%s", line);
 	retVal = write(sockfd, line, strlen(line));
 	if (retVal < 0) perror("str_cli: write error");
 
-        memset(rcvline, 0, sizeof(rcvline));
+    memset(rcvline, 0, sizeof(rcvline));
 	n = read(sockfd, rcvline, MAXLINE);
 	if (n<0) perror("str_cli: read error");
 	rcvline[n] = 0;
 	printf("OP%d(%s)=",operation,lineOrig);
 	printf("%s", rcvline);
-
-     }
+	printf("\n");
+    }
     /* Close file */
     if (fclose(fp)) {
         printf("Error! Could not close file\n");
