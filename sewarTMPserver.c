@@ -225,28 +225,26 @@ int main(int argc, char ** argv) {
 
 	l_retVal = listen(listenfd, LISTENQ);
 	if (l_retVal < 0) perror("main: listen error");
-
 	for ( ; ; ) {
-			len = sizeof(cliaddr);
-			connfd = accept(listenfd, (struct sockaddr *) &cliaddr, &len);
-			if (connfd < 0) perror("main: accept error");
-			g_data.clicount++;
 
-			if( (pid = fork()) == 0 ) {
-				retVal = close(listenfd);
-				if (retVal < 0) perror("main: child close error");
-				operations(connfd, inet_ntoa(cliaddr.sin_addr), log);
-				exit(0);
-			}
-			else {
-				if (g_data.clicount > 5) {
+        if (g_data.clicount > 5) {
 				  if((pid = waitpid(-1, &status, 0)) == -1)
 				     perror("main: wait error");
 				  else g_data.clicount--;
 				}
-			}
-			retVal = close(connfd);
-			if (retVal < 0) perror("main: parent close error");
+		len = sizeof(cliaddr);
+		connfd = accept(listenfd, (struct sockaddr *) &cliaddr, &len);
+		if (connfd < 0) perror("main: accept error");
+		g_data.clicount++;
+
+		if( (pid = fork()) == 0 ) {
+				retVal = close(listenfd);
+				if (retVal < 0) perror("main: child close error");
+				operations(connfd, inet_ntoa(cliaddr.sin_addr), log);
+				exit(0);
+		}
+		retVal = close(connfd);
+		if (retVal < 0) perror("main: parent close error");
 	}
     fclose(log);
     return 0; }
